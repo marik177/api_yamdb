@@ -83,8 +83,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'ENDSSH'
             cd app
             export $(grep -v '^#' .env | xargs)
-            docker login ghcr.io -u $NAMESPACE -p $PERSONAL_ACCESS_TOKEN
-            docker pull $WEB_IMAGE
-            docker pull $NGINX_IMAGE
-            docker-compose -f docker-compose.ci.prod.yml up -d
+            sudo docker login ghcr.io -u $NAMESPACE -p $PERSONAL_ACCESS_TOKEN
+            sudo docker pull $WEB_IMAGE
+            sudo docker pull $NGINX_IMAGE
+            sudo docker-compose -f docker-compose.ci.prod.yml up -d
           ENDSSH  
