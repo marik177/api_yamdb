@@ -3,8 +3,8 @@ name: api_yamdb workflow
 on: push
 
 env:
-  WEB_IMAGE: $(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/web
-  NGINX_IMAGE: $(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/nginx
+  WEB_IMAGE: $(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')-web
+  NGINX_IMAGE: $(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')-nginx
 
 jobs:
 #   tests:
@@ -79,7 +79,6 @@ jobs:
 #          password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Log in to Docker
         run: |
-          echo ${DOCKER_TOKEN}
           echo ${DOCKER_TOKEN} docker login -u marik177
         env:
           DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
