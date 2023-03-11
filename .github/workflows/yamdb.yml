@@ -78,7 +78,9 @@ jobs:
 #          username: ${{ secrets.DOCKER_USERNAME }}
 #          password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Log in to Docker
-        run: echo ${DOCKER_TOKEN} | docker login -u marik177
+        run: |
+          echo ${DOCKER_TOKEN}
+          echo ${DOCKER_TOKEN} docker login -u marik177
         env:
           DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
       - name: Pull images
