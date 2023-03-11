@@ -91,8 +91,11 @@ jobs:
           docker-compose -f docker-compose.ci.yml build
       - name: Push images
         run: |
+          echo ${DOCKER_TOKEN} docker login -u marik177
           docker push ${{ env.WEB_IMAGE }}
           docker push ${{ env.NGINX_IMAGE }}
+        env:
+          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
 
       
           
