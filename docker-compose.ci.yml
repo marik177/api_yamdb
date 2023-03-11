@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  web:
+    restart: always
+    build:
+      context: ./app
+      dockerfile: Dockerfile_prod
+      cache_from:
+        - "${WEB_IMAGE}"
+    image: "${WEB_IMAGE}"
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; gunicorn --bind 0.0.0.0:8000 api_yamdb.wsgi'
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/mediafiles
+    expose:
+      - 8000
+    env_file: .env
+      - db
+
+  db:
+    restart: always
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data/
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=marik
+      - POSTGRES_PASSWORD=marik_password
+      - POSTGRES_DB=yamdb_dev
+
+  nginx:
+    restart: always
+    build:
+      context: ./nginx
+      cache_from:
+        - "${NGINX_IMAGE}"
+    image: "${NGINX_IMAGE}"
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/mediafiles
+    ports:
+      - '80:80'
+    depends_on:
+      - web
