@@ -81,7 +81,7 @@ jobs:
         run: |
           scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose.ci.prod.yml ${{ secrets.USER }}@${{ secrets.HOST }}:/home/${{ secrets.USER }}/app
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'ENDSSH'
-            cd /app
+            cd app
             source .env
             docker login ghcr.io -u $NAMESPACE -p $PERSONAL_ACCESS_TOKEN
             docker pull $WEB_IMAGE
