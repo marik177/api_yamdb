@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  web:
+    restart: always
+    build:
+      context: ./app
+      dockerfile: Dockerfile_prod
+    image: marik177/api_yamdb-app
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; gunicorn --bind 0.0.0.0:8000 api_yamdb.wsgi'
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/mediafiles
+    expose:
+      - 8000
+    environment:
+      DEBUG: 0
+      SECRET_KEY: 'p&l%385148kslhtyn^##a1)ilz@4zqj=rq&agdol^##zgl9(vs'
+      DJANGO_ALLOWED_HOSTS: 'localhost 127.0.0.1 [::1] localhost *'
+      SQL_ENGINE: django.db.backends.postgresql
+      SQL_DATABASE: yamdb_dev
+      SQL_USER: marik
+      SQL_PASSWORD: marik_password
+      SQL_HOST: db
+      SQL_PORT: 5432
+      DATABASE: postgres
+    depends_on:
+      - db
+
+  db:
+    restart: always
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data/
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=marik
+      - POSTGRES_PASSWORD=marik_password
+      - POSTGRES_DB=yamdb_dev
+
+  nginx:
+    restart: always
+    build: ./nginx
+    image: marik177/api_yamdb-nginx
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/mediafiles
+    ports:
+      - '80:80'
+    depends_on:
+      - web
+
+
+
+volumes:
+  postgres_data_prod:
+  static_volume:
+  media_volume:
