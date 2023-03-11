@@ -3,8 +3,8 @@ name: api_yamdb workflow
 on: push
 
 env:
-  WEB_IMAGE: marik177/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/web_2
-  NGINX_IMAGE: marik177/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/nginx_2
+  WEB_IMAGE: $(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/web_2
+  NGINX_IMAGE: $(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/nginx_2
 
 jobs:
 #   tests:
@@ -78,7 +78,7 @@ jobs:
             sudo docker-compose -f docker-compose.ci.yml build
       - name: Push images
         run: |
-          echo ${{ env.WEB_IMAGE }}
+          echo ${{ env.WEB_IMAGE }}  !!!!!!!!!!!!!!
           docker push ${{ env.WEB_IMAGE }}
           docker push ${{ env.NGINX_IMAGE }}
 
