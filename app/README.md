@@ -1,4 +1,4 @@
-  # API_YamDB
+# API_YamDB
 
 
 REST API для сервиса YaMDb — базы отзывов о фильмах, книгах и музыке.
