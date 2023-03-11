@@ -3,8 +3,8 @@ name: api_yamdb workflow
 on: push
 
 env:
-  WEB_IMAGE: $(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/web_2
-  NGINX_IMAGE: $(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/nginx_2
+  WEB_IMAGE: $(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/web
+  NGINX_IMAGE: $(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/nginx
 
 jobs:
 #   tests:
@@ -63,10 +63,6 @@ jobs:
           echo SQL_HOST=${{ secrets.SQL_HOST }} >> .env
           echo SQL_PORT=${{ secrets.SQL_PORT }} >> .env
           echo DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }} >> .env
-      - name: Set environment variables
-        run: |
-          echo "WEB_IMAGE=$(echo ${{env.WEB_IMAGE}} )" >> $GITHUB_ENV
-          echo "NGINX_IMAGE=$(echo ${{env.NGINX_IMAGE}} )" >> $GITHUB_ENV
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -77,9 +73,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       
-      - name: Build docker    
+      - name: Pull images
         run: |
-            sudo docker-compose -f docker-compose.ci.yml build
+          docker pull ${{ env.WEB_IMAGE }} || true
+          docker pull ${{ env.NGINX_IMAGE }} || true
+      - name: Build images
+        run: |
+          docker-compose -f docker-compose.ci.yml build
       - name: Push images
         run: |
           docker push ${{ env.WEB_IMAGE }}
