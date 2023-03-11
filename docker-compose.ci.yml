@@ -47,3 +47,8 @@ services:
       - '80:80'
     depends_on:
       - web
+
+volumes:
+  postgres_data_prod:
+  static_volume:
+  media_volume:
