@@ -6,8 +6,8 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile_prod
-      cache_from:
-        - "${WEB_IMAGE}"
+#      cache_from:
+#        - "${WEB_IMAGE}"
     image: "${WEB_IMAGE}"
     command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; gunicorn --bind 0.0.0.0:8000 api_yamdb.wsgi'
     volumes:
@@ -37,8 +37,8 @@ services:
     restart: always
     build:
       context: ./nginx
-      cache_from:
-        - "${NGINX_IMAGE}"
+#      cache_from:
+#        - "${NGINX_IMAGE}"
     image: "${NGINX_IMAGE}"
     volumes:
       - static_volume:/home/app/web/staticfiles
