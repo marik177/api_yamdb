@@ -4,6 +4,7 @@ services:
   web:
     restart: always
     image: "${WEB_IMAGE}"
+#    image: marik177/api_yamdb-app
     command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; gunicorn --bind 0.0.0.0:8000 api_yamdb.wsgi'
     volumes:
       - static_volume:/home/app/web/staticfiles
@@ -32,6 +33,7 @@ services:
   nginx:
     restart: always
     image: "${NGINX_IMAGE}"
+#    image: marik177/api_yamdb-nginx
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
