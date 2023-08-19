@@ -102,3 +102,4 @@ class CommentSerializer(serializers.ModelSerializer):
         comment = Comment.objects.create(author=author,
                                          text=text, review=review)
         return comment
+
